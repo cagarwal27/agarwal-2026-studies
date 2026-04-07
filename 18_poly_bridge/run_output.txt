@@ -1,0 +1,166 @@
+======================================================================
+  POLYNOMIAL BRIDGE SCALING: P(stable limit cycle | d)
+  2D polynomial ODE with cubic damping
+======================================================================
+
+Model:
+  dx/dt = sum_{i+j<=p} a_{ij} * x^i * y^j - eps*x*(x^2+y^2)
+  dy/dt = sum_{i+j<=p} b_{ij} * x^i * y^j - eps*y*(x^2+y^2)
+  eps = 0.01 (fixed cubic damping)
+  d = (p+1)(p+2) total random parameters
+
+Equilibria: vectorized Newton, 16 initial conditions, 20 iterations
+ODE: t_max=300, RK45, diverge at |z|>100.0
+Periodic: CV<0.2, min 5 peaks, amp>0.01
+
+Degree-dimension table:
+  p=2: 6 terms/eq, d=12, N=100,000
+  p=3: 10 terms/eq, d=20, N=100,000
+  p=4: 15 terms/eq, d=30, N=200,000
+  p=5: 21 terms/eq, d=42, N=500,000
+  p=6: 28 terms/eq, d=56, N=1,000,000
+
+======================================================================
+  PHASE 1: P(limit cycle | d)
+======================================================================
+
+--- d = 12 (degree 2 polynomial), N = 100,000 ---
+        20,000/100,000 | spiral 4,569 | lc 377
+        40,000/100,000 | spiral 9,267 | lc 740
+        60,000/100,000 | spiral 13,995 | lc 1121
+        80,000/100,000 | spiral 18,700 | lc 1488
+       100,000/100,000 | spiral 23,406 | lc 1857
+  N_lc=1,857  N_spiral=23,406
+  P=1.857000e-02  ln(1/P)=3.986  time=92.6s
+
+--- d = 20 (degree 3 polynomial), N = 100,000 ---
+        20,000/100,000 | spiral 6,095 | lc 399
+        40,000/100,000 | spiral 12,144 | lc 803
+        60,000/100,000 | spiral 18,074 | lc 1224
+        80,000/100,000 | spiral 24,088 | lc 1652
+       100,000/100,000 | spiral 30,158 | lc 2079
+  N_lc=2,079  N_spiral=30,158
+  P=2.079000e-02  ln(1/P)=3.873  time=181.5s
+
+--- d = 30 (degree 4 polynomial), N = 200,000 ---
+        40,000/200,000 | spiral 14,718 | lc 516
+        80,000/200,000 | spiral 29,286 | lc 1034
+       120,000/200,000 | spiral 43,877 | lc 1554
+       160,000/200,000 | spiral 58,447 | lc 2103
+       200,000/200,000 | spiral 72,815 | lc 2629
+  N_lc=2,629  N_spiral=72,815
+  P=1.314500e-02  ln(1/P)=4.332  time=696.4s
+
+--- d = 42 (degree 5 polynomial), N = 500,000 ---
+       100,000/500,000 | spiral 38,281 | lc 1498
+       200,000/500,000 | spiral 76,637 | lc 3033
+       300,000/500,000 | spiral 114,768 | lc 4542
+       400,000/500,000 | spiral 153,266 | lc 6053
+       500,000/500,000 | spiral 191,339 | lc 7601
+  N_lc=7,601  N_spiral=191,339
+  P=1.520200e-02  ln(1/P)=4.186  time=2495.8s
+
+--- d = 56 (degree 6 polynomial), N = 1,000,000 ---
+       200,000/1,000,000 | spiral 84,525 | lc 2565
+       400,000/1,000,000 | spiral 169,061 | lc 5192
+       600,000/1,000,000 | spiral 253,549 | lc 7791
+       800,000/1,000,000 | spiral 337,598 | lc 10466
+     1,000,000/1,000,000 | spiral 421,736 | lc 13095
+  N_lc=13,095  N_spiral=421,736
+  P=1.309500e-02  ln(1/P)=4.336  time=4180.6s
+
+======================================================================
+  SUMMARY TABLE
+======================================================================
+
+   d |  p |          N | N_spiral |   N_lc |        P(lc) |  ln(1/P)
+--------------------------------------------------------------------
+  12 |  2 |    100,000 |   23,406 |  1,857 | 1.857000e-02 |    3.986
+  20 |  3 |    100,000 |   30,158 |  2,079 | 2.079000e-02 |    3.873
+  30 |  4 |    200,000 |   72,815 |  2,629 | 1.314500e-02 |    4.332
+  42 |  5 |    500,000 |  191,339 |  7,601 | 1.520200e-02 |    4.186
+  56 |  6 |  1,000,000 |  421,736 | 13,095 | 1.309500e-02 |    4.336
+
+======================================================================
+  PHASE 2: Fit gamma_poly
+======================================================================
+
+P(lc) peaks near d=20. Fitting decay regime: d >= 20
+Fitting 4 points, d = 20-56
+Also fitting ALL 5 points for comparison.
+
+--- DECAY REGIME (n=4) ---
+
+Model A (linear): ln(1/P) = 3.8169 + 0.009860 * d
+  gamma_poly = 0.009860
+  R^2        = 0.498131
+  gamma_cusp = 0.197000  ratio = 0.050 (95.0% diff)
+  gamma_Hopf = 0.175000  ratio = 0.056 (94.4% diff)
+  --> STRONGLY DIFFERENT from gamma_cusp (>50%)
+
+Model B (quadratic): ln(1/P) = 3.1423 + 0.050235*d + -0.00052856*d^2
+  R^2 = 0.659654
+  g2 < 0: decay DECELERATES
+
+Model C (stretched exp): ln(1/P) = 0.4263 + 2.633890 * d^0.1000
+  R^2 = 0.584562
+  beta < 1: sublinear (decay decelerates)
+
+Linearity check:
+  Max |residual| from linear fit: 0.2190
+  --> Exponential decay CONFIRMED
+
+--- ALL VALID POINTS (n=5) ---
+
+Model A (linear): ln(1/P) = 3.8538 + 0.009027 * d
+  gamma_poly = 0.009027
+  R^2        = 0.580250
+  gamma_cusp = 0.197000  ratio = 0.046 (95.4% diff)
+  gamma_Hopf = 0.175000  ratio = 0.052 (94.8% diff)
+  --> STRONGLY DIFFERENT from gamma_cusp (>50%)
+
+Model B (quadratic): ln(1/P) = 3.7135 + 0.019509*d + -0.00015380*d^2
+  R^2 = 0.608012
+  g2 < 0: decay DECELERATES
+
+Model C (stretched exp): ln(1/P) = 3.3942 + 0.219045 * d^0.3633
+  R^2 = 0.596240
+  beta < 1: sublinear (decay decelerates)
+
+Linearity check:
+  Max |residual| from linear fit: 0.2072
+  --> Exponential decay CONFIRMED
+
+Local gamma between consecutive points:
+  d=20->30: gamma_local = 0.0458
+  d=30->42: gamma_local = -0.0121
+  d=42->56: gamma_local = 0.0107
+
+======================================================================
+  COMPARISON TABLE
+======================================================================
+
+Source          |    gamma |      R^2 | Model class              
+-----------------------------------------------------------------
+gamma_cusp      |   0.1970 |    0.995 | 1D Hill function         
+gamma_Hopf      |   0.1750 |   0.9997 | 2D Hill function         
+gamma_poly      |   0.0099 |   0.4981 | 2D polynomial            
+
+Stretched exponent beta_poly = 0.1000
+  (beta=1 is linear; Study 16 Hopf had accelerating decay)
+
+======================================================================
+  CONCLUSION
+======================================================================
+
+  gamma_poly = 0.0099  (R^2 = 0.4981)
+  gamma_cusp = 0.1970
+  gamma_Hopf = 0.1750
+  Ratio (poly/cusp) = 0.050
+
+  INTERPRETATION: STRONGLY MODEL-DEPENDENT or NO DECAY
+  gamma_poly differs by >50% from gamma_cusp.
+  --> Different function classes produce qualitatively
+      different parameter-space geometry.
+
+======================================================================

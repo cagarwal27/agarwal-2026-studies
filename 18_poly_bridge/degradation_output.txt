@@ -1,0 +1,183 @@
+======================================================================
+  POLYNOMIAL + DEGRADATION: P(stable limit cycle | d)
+  2D polynomial ODE with cubic damping + enforced degradation
+======================================================================
+
+Model:
+  dx/dt = -b1*x + [other a_{ij} x^i y^j] - eps*x*(x^2+y^2)
+  dy/dt = -b2*y + [other b_{ij} x^i y^j] - eps*y*(x^2+y^2)
+  eps = 0.01 (fixed cubic damping)
+  b1, b2 ~ U[0.2, 2.0] (enforced degradation)
+  d = (p+1)(p+2) total random parameters (same as Study 18)
+
+Hypothesis: degradation-vs-activation architecture drives
+  exponential decay of P(organized | d), not Hill saturation.
+
+Equilibria: vectorized Newton, 16 initial conditions, 20 iterations
+ODE: t_max=300, RK4, diverge at |z|>100.0
+Periodic: CV<0.2, min 5 peaks, amp>0.01
+
+Degree-dimension table:
+  p=2: 6 terms/eq, d=12, N=100,000
+  p=3: 10 terms/eq, d=20, N=200,000
+  p=4: 15 terms/eq, d=30, N=500,000
+  p=5: 21 terms/eq, d=42, N=2,000,000
+  p=6: 28 terms/eq, d=56, N=5,000,000
+
+======================================================================
+  PHASE 1: P(limit cycle | d)
+======================================================================
+
+--- d = 12 (degree 2 polynomial + degradation), N = 100,000 ---
+        20,000/100,000 | spiral 978 | lc 202
+        40,000/100,000 | spiral 1,946 | lc 415
+        60,000/100,000 | spiral 2,960 | lc 632
+        80,000/100,000 | spiral 3,989 | lc 858
+       100,000/100,000 | spiral 5,003 | lc 1092
+  N_lc=1,092  N_spiral=5,003
+  P=1.092000e-02  ln(1/P)=4.517  time=54.2s
+
+--- d = 20 (degree 3 polynomial + degradation), N = 200,000 ---
+        40,000/200,000 | spiral 5,414 | lc 434
+        80,000/200,000 | spiral 10,833 | lc 856
+       120,000/200,000 | spiral 16,134 | lc 1252
+       160,000/200,000 | spiral 21,472 | lc 1637
+       200,000/200,000 | spiral 26,828 | lc 2038
+  N_lc=2,038  N_spiral=26,828
+  P=1.019000e-02  ln(1/P)=4.586  time=215.8s
+
+--- d = 30 (degree 4 polynomial + degradation), N = 500,000 ---
+       100,000/500,000 | spiral 21,181 | lc 860
+       200,000/500,000 | spiral 42,420 | lc 1756
+       300,000/500,000 | spiral 64,036 | lc 2652
+       400,000/500,000 | spiral 85,206 | lc 3615
+       500,000/500,000 | spiral 106,521 | lc 4512
+  N_lc=4,512  N_spiral=106,521
+  P=9.024000e-03  ln(1/P)=4.708  time=1082.5s
+
+--- d = 42 (degree 5 polynomial + degradation), N = 2,000,000 ---
+       400,000/2,000,000 | spiral 98,089 | lc 3417
+       800,000/2,000,000 | spiral 196,447 | lc 6932
+     1,200,000/2,000,000 | spiral 294,739 | lc 10304
+     1,600,000/2,000,000 | spiral 393,196 | lc 13728
+     2,000,000/2,000,000 | spiral 491,348 | lc 17090
+  N_lc=17,090  N_spiral=491,348
+  P=8.545000e-03  ln(1/P)=4.762  time=6443.6s
+
+--- d = 56 (degree 6 polynomial + degradation), N = 5,000,000 ---
+     1,000,000/5,000,000 | spiral 295,634 | lc 7825
+     2,000,000/5,000,000 | spiral 592,494 | lc 15795
+     3,000,000/5,000,000 | spiral 888,566 | lc 23757
+     4,000,000/5,000,000 | spiral 1,185,130 | lc 31660
+     5,000,000/5,000,000 | spiral 1,482,055 | lc 39590
+  N_lc=39,590  N_spiral=1,482,055
+  P=7.918000e-03  ln(1/P)=4.839  time=11809.3s
+
+======================================================================
+  SUMMARY TABLE
+======================================================================
+
+   d |  p |          N | N_spiral |   N_lc |        P(lc) |  ln(1/P)
+--------------------------------------------------------------------
+  12 |  2 |    100,000 |    5,003 |  1,092 | 1.092000e-02 |    4.517
+  20 |  3 |    200,000 |   26,828 |  2,038 | 1.019000e-02 |    4.586
+  30 |  4 |    500,000 |  106,521 |  4,512 | 9.024000e-03 |    4.708
+  42 |  5 |  2,000,000 |  491,348 | 17,090 | 8.545000e-03 |    4.762
+  56 |  6 |  5,000,000 | 1,482,055 | 39,590 | 7.918000e-03 |    4.839
+
+Study 18 reference (no degradation):
+  d=12: P_degrad=1.092e-02  P_poly=1.857e-02  ratio=0.5880  (58.8%)
+  d=20: P_degrad=1.019e-02  P_poly=2.079e-02  ratio=0.4901  (49.0%)
+  d=30: P_degrad=9.024e-03  P_poly=1.315e-02  ratio=0.6862  (68.6%)
+  d=42: P_degrad=8.545e-03  P_poly=1.520e-02  ratio=0.5622  (56.2%)
+  d=56: P_degrad=7.918e-03  P_poly=1.310e-02  ratio=0.6044  (60.4%)
+
+======================================================================
+  PHASE 2: Fit gamma_poly_degrad
+======================================================================
+
+Fitting 5 points, d = 12-56
+Also fitting ALL 5 points for comparison.
+
+--- DECAY REGIME (n=5) ---
+
+Model A (linear): ln(1/P) = 4.4483 + 0.007317 * d
+  gamma_poly_degrad = 0.007317
+  R^2               = 0.963872
+  gamma_cusp = 0.197000  ratio = 0.037 (96.3% diff)
+  gamma_Hopf = 0.175000  ratio = 0.042 (95.8% diff)
+  gamma_poly = 0.010000  ratio = 0.732 (vs Study 18 no-degradation)
+  --> STRONGLY DIFFERENT from gamma_cusp (>50%)
+
+Model B (quadratic): ln(1/P) = 4.3617 + 0.013793*d + -0.00009502*d^2
+  R^2 = 0.990666
+  g2 < 0: decay DECELERATES
+
+Model C (stretched exp): ln(1/P) = 3.9255 + 0.285931 * d^0.2888
+  R^2 = 0.989054
+  beta < 1: sublinear (decay decelerates)
+
+Linearity check:
+  Max |residual| from linear fit: 0.0400
+  --> Exponential decay CONFIRMED
+
+--- ALL VALID POINTS (n=5) ---
+
+Model A (linear): ln(1/P) = 4.4483 + 0.007317 * d
+  gamma_poly_degrad = 0.007317
+  R^2               = 0.963872
+  gamma_cusp = 0.197000  ratio = 0.037 (96.3% diff)
+  gamma_Hopf = 0.175000  ratio = 0.042 (95.8% diff)
+  gamma_poly = 0.010000  ratio = 0.732 (vs Study 18 no-degradation)
+  --> STRONGLY DIFFERENT from gamma_cusp (>50%)
+
+Model B (quadratic): ln(1/P) = 4.3617 + 0.013793*d + -0.00009502*d^2
+  R^2 = 0.990666
+  g2 < 0: decay DECELERATES
+
+Model C (stretched exp): ln(1/P) = 3.9255 + 0.285931 * d^0.2888
+  R^2 = 0.989054
+  beta < 1: sublinear (decay decelerates)
+
+Linearity check:
+  Max |residual| from linear fit: 0.0400
+  --> Exponential decay CONFIRMED
+
+Local gamma between consecutive points:
+  d=12->20: gamma_local = 0.0086
+  d=20->30: gamma_local = 0.0122
+  d=30->42: gamma_local = 0.0045
+  d=42->56: gamma_local = 0.0054
+
+======================================================================
+  COMPARISON TABLE
+======================================================================
+
+Source               |    gamma |      R^2 | Model class                        
+--------------------------------------------------------------------------------
+gamma_cusp           |   0.1970 |    0.995 | 1D Hill (degradation + sat.)       
+gamma_Hopf           |   0.1750 |   0.9997 | 2D Hill (degradation + sat.)       
+gamma_poly           |   0.0100 |    0.498 | 2D polynomial (no degradation)     
+gamma_poly_degrad    |   0.0073 |   0.9639 | 2D polynomial + degradation        
+
+Stretched exponent beta_poly_degrad = 0.2888
+  (beta=1 is linear; Study 16 Hopf had accelerating decay)
+
+======================================================================
+  CONCLUSION
+======================================================================
+
+  gamma_poly_degrad = 0.0073  (R^2 = 0.9639)
+  gamma_cusp        = 0.1970
+  gamma_Hopf        = 0.1750
+  gamma_poly        = 0.0100  (Study 18, no degradation)
+
+  INTERPRETATION: DEGRADATION ALONE DOES NOT DRIVE DECAY
+  gamma_poly_degrad = 0.0073 (stays flat like Study 18)
+
+  The exponential decay requires Hill-function saturation
+  specifically, not just degradation structure. The architectural
+  hypothesis is wrong -- something about bounded sigmoidal
+  nonlinearities specifically creates the exponential rarity.
+
+======================================================================
