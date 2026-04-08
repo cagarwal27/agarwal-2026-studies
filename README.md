@@ -21,7 +21,7 @@ Most scripts require only numpy and scipy. Exceptions noted in the table below.
 | 06 | [Medical Systems](06_medical_systems/) | 5 | 10.1, 10.2 | YELLOW | Tumor B = 2.73 +/- 2.7%; Diabetes 1D FAILS but 2D B = 5.54 +/- 5.2% | numba (1 script) |
 | 07 | [Cross-Domain Physics](07_cross_domain_physics/) | 4 | 5.3, 10.3-10.5 | RED | Thermohaline K = 0.55; Soviet 4 free params (RED); financial uncalibrated (RED) | -- |
 | 08 | [Blind Tests](08_blind_tests/) | 2 | 11.1, 11.2 | GREEN | Josephson B CV = 0.3%, nanoparticle B CV = 1.5-2.7%; 0 free params | -- |
-| 09 | [Search Equation](09_fire_equation/) | 6 | 1.4, 11.3, Facts 35-39, 74 | YELLOW | S0 ~ 10^13.0 +/- 0.8 (29 data points); 6/6 intermediate innovations pass; v is nuisance parameter | matplotlib (all 6) |
+| 09 | [Search Equation](09_fire_equation/) | 7 | 1.4, 9.2, 11.3, Facts 35-39, 74, 98 | YELLOW | S0 ~ 10^13.0 +/- 0.8 (29 data points); 6/6 intermediate innovations pass; v validated with published rates (4/6 transitions); 47 cross-transition ratio pairs 72% within 1 OOM | matplotlib (6 scripts) |
 | 10 | [Architecture Scaling](10_architecture_scaling/) | 7 | 4.1-4.5, 11.4 | GREEN/YELLOW | f(k) = alpha^k, R^2 = 0.997; alpha model-dependent (0.37-0.91) | -- |
 | 11 | [Cusp Bridge](11_cusp_bridge/) | 5 | 4.6, 11.5 | YELLOW | S(d) = exp(gamma*d), gamma_cusp = 0.197 (Hill class); d ~ 150 for S = 10^13; R²=0.995 | -- |
 | 12 | [Channel Independence](12_channel_independence/) | 2 | Facts 29, 31 | GREEN | Multiplicative stacking confirmed; 12/12 systems classified correctly | -- |
@@ -45,15 +45,16 @@ Most scripts require only numpy and scipy. Exceptions noted in the table below.
 | 31 | [Protein Stability Window](31_protein_stability_window/) | 1 | 31.1 | GREEN | 22/25 proteins B > 6.0; stability window requires barrier-noise comparable scales; scope boundary identified | -- |
 | 32 | [Crossing Theorem](32_crossing_theorem/) | 1 | 32.1, 32.2 | GREEN | sigma* = sigma_process resolved: IVT crossing guaranteed; all 6 systems B_cross in [1.8, 6.0]; BW = 35.3% | -- |
 | 33 | [Noise Robustness](33_noise_robustness/) | 3 | Reviewer 1.1/2.6 | GREEN | Multiplicative g(x)=sigma*sqrt(x): B_mult CV=3.07% (q=8); colored noise: B_colored CV=1.95%; Ito-Strat: both CV<5%. B invariance robust to noise type | -- |
+| 34 | [Kramers-Langer beta_0](34_kramers_langer_beta0/) | 1 | 34.1, Fact 97 | GREEN | Theoretical beta_0 from ODE Jacobians for all 3 2D systems (toggle, tumor-immune, diabetes); 0 free params; replaces circular beta_0 in data collapse | -- |
 | -- | [misc](misc/) | 4 | -- | YELLOW | Lake 2D model investigations (historical) | -- |
 
-**Totals:** ~98 scripts, 33 studies + misc
+**Totals:** ~100 scripts, 34 studies + misc
 
 ## Grade distribution
 
 | Grade | Studies | Description |
 |-------|---------|-------------|
-| GREEN | 08, 10 (core), 12, 13, 15 (flowers), 16, 18, 19, **21**, 22, 23, 24, **25**, **27**, **28**, **30**, **31**, **32**, **33** | All params sourced or synthetic by design; fully reproducible |
+| GREEN | 08, 10 (core), 12, 13, 15 (flowers), 16, 18, 19, **21**, 22, 23, 24, **25**, **27**, **28**, **30**, **31**, **32**, **33**, **34** | All params sourced or synthetic by design; fully reproducible |
 | YELLOW | 01-06, 09-11, 14, 15 (CAM), 17, **20**, **26** | Some modified/derived params or author estimates; reproducible with caveats |
 | RED | 07 | Soviet (4 free uncalibrated params), financial generic (no real data); note: calibrated financial upgraded to GREEN in Study 21 |
 
@@ -114,6 +115,7 @@ Most scripts require only numpy and scipy. Exceptions noted in the table below.
 | `step12d_independent_P.py` | 09 - Search Equation |
 | `step12e_intermediate_k.py` | 09 - Search Equation |
 | `v_sensitivity_analysis.py` | 09 - Search Equation |
+| `v_independent_validation.py` | 09 - Search Equation |
 | `step13_cascade_and_barrier_distribution.py` | 10 - Architecture Scaling |
 | `step13_hiv_structural_omega.py` | 05 - HIV |
 | `step13_peatland_kramers.py` | 01 - Core Kramers Duality |
@@ -160,6 +162,7 @@ Most scripts require only numpy and scipy. Exceptions noted in the table below.
 | `study31_protein_stability_window.py` | 31 - Protein Stability Window |
 | `crossing_theorem_test.py` | 32 - Crossing Theorem |
 | `route_a_eigenvalue_test.py` | 32 - Crossing Theorem |
+| `study34_kramers_langer_beta0.py` | 34 - Kramers-Langer beta_0 |
 
 ## Known replicability flags
 
